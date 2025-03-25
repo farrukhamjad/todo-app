@@ -29,7 +29,7 @@ const Done = () => {
                   <p>{todo.description}</p>
                   <ul className="list-disc ml-4">
                     {todo.todos && todo.todos.map((item) => (
-                      <li key={item.id} className="text-sm">{item.text}</li>
+                      <li key={item.id} className="text-md">{item.text}</li>
                     ))}
                   </ul>
                 </div>

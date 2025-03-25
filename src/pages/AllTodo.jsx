@@ -50,12 +50,12 @@ const AllTodo = () => {
                 <p>{todo.description}</p>
                 <ul className="list-disc ml-0">
                   {todo.todos && todo.todos.map((item) => (
-                    <li key={item.id} className="text-md flex items-center list-none pl-0">
+                    <li key={item.id} className={`text-md flex items-center list-none pl-0 ${item.checked ? 'line-through text-blue-500' : ''} `}>
                       <input 
                         type="checkbox"
                         checked={item.checked || false}
                         onChange={() => handleCheckboxChange(todo.id, item.id)}
-                        className='mr-3'
+                        className='mr-3 cursor-pointer'
                       />
                       {item.text}
                     </li>
