@@ -36,15 +36,10 @@ export const todoSlice = createSlice({
       localStorage.setItem('todos', JSON.stringify(state.todos));
     },
     updateTodo: (state, action) => {
-      const { id, title, description, todos } = action.payload;
+      const { id } = action.payload;
       const todoIndex = state.todos.findIndex((todo) => todo.id === id);
       if (todoIndex !== -1) {
-        state.todos[todoIndex] = {
-          ...state.todos[todoIndex],
-          title,
-          description,
-          todos,
-        };
+        state.todos[todoIndex] = action.payload;
         localStorage.setItem('todos', JSON.stringify(state.todos));
       }
     },

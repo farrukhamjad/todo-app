@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleComplete, deleteTodo } from '../store/todoSlice';
+import { toggleComplete, deleteTodo, updateTodo } from '../store/todoSlice';
 import { Link } from 'react-router-dom';
 
 const AllTodo = () => {
@@ -13,6 +13,23 @@ const AllTodo = () => {
   const handleToggleComplete = (id) => {
     dispatch(toggleComplete(id));
   };
+
+  const handleCheckboxChange = (todoId, itemId) => {
+    const todo = todos.find((todo) => todo.id === todoId);
+    if (todo) {
+      const updatedTodos = todo.todos.map((item) => 
+        item.id === itemId ? { ...item, checked: !item.checked } : item
+      );
+      const allChecked = updatedTodos.every((item) => item.checked);
+      const updatedTodo = { 
+        ...todo, 
+        todos: updatedTodos,
+        completed: allChecked
+      };
+      dispatch(updateTodo(updatedTodo));
+    }
+  };
+  
 
   return (
     <div className="w-full mt-10">
@@ -31,25 +48,33 @@ const AllTodo = () => {
                 </p>
                 <h2 className="text-xl font-bold mb-4">{todo.title}</h2>
                 <p>{todo.description}</p>
-                <ul className="list-disc ml-4">
+                <ul className="list-disc ml-0">
                   {todo.todos && todo.todos.map((item) => (
-                    <li key={item.id} className="text-sm">{item.text}</li>
+                    <li key={item.id} className="text-md flex items-center list-none pl-0">
+                      <input 
+                        type="checkbox"
+                        checked={item.checked || false}
+                        onChange={() => handleCheckboxChange(todo.id, item.id)}
+                        className='mr-3'
+                      />
+                      {item.text}
+                    </li>
                   ))}
                 </ul>
               </div>
               <div className="mt-3 flex justify-between flex-wrap gap-3">
-                <button
-                  onClick={() => handleToggleComplete(todo.id)}
-                  className="cursor-pointer bg-green-500 text-white px-4 py-2 rounded"
-                >
-                  {todo.completed ? 'Completed' : 'Complete'}
-                </button>
+                {todo.category === 'Task' && (
+                  <button
+                    onClick={() => handleToggleComplete(todo.id)}
+                    className="cursor-pointer bg-green-500 text-white px-4 py-2 rounded"
+                  >
+                    {todo.completed ? 'Completed' : 'Complete'}
+                  </button>
+                )}
 
                 <Link
                   to={`/${todo.category}/${todo.id}`}
-                  className={`bg-blue-500 text-white px-4 py-2 rounded ${
-                    todo.completed ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-                  }`}
+                  className={`bg-blue-500 text-white px-4 py-2 rounded ${todo.completed ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                   aria-disabled={todo.completed}
                   onClick={(e) => {
                     if (todo.completed) {
